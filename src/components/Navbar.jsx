@@ -1,13 +1,18 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-const Navbar = () => {
+const Navbar = ({ cart }) => {
   const [token, setToken] = useState(false);
-  const total = 25000;
-  const navigate = useNavigate();
 
-  const handleLogin = () => setToken(true);
-  const handleLogout = () => setToken(false);
+  const total = cart.reduce(
+    (sum, pizza) => sum + pizza.price * pizza.count,
+    0
+  );
+
+  const totalItems = cart.reduce(
+    (sum, pizza) => sum + pizza.count,
+    0
+  );
 
   const btnStyle = {
     background: "transparent",
@@ -37,7 +42,11 @@ const Navbar = () => {
               Profile
             </button>
 
-            <button className="btn" style={btnStyle} onClick={handleLogout}>
+            <button
+              className="btn"
+              style={btnStyle}
+              onClick={() => setToken(false)}
+            >
               Logout
             </button>
           </>
@@ -47,22 +56,18 @@ const Navbar = () => {
               Login
             </Link>
 
-            <button
-              className="btn"
-              style={btnStyle}
-              onClick={() => navigate("/register")}
-            >
+            <Link to="/register" className="btn" style={btnStyle}>
               Register
-            </button>
+            </Link>
           </>
         )}
       </div>
 
-      {/* TOTAL AL EXTREMO DERECHO */}
+      {/* CARRITO AL EXTREMO DERECHO */}
       <div className="ms-auto">
-        <button className="btn" style={btnStyle}>
-          Total: ${total.toLocaleString("es-CL")}
-        </button>
+        <Link to="/cart" className="btn" style={btnStyle}>
+          🛒 {totalItems} | ${total.toLocaleString("es-CL")}
+        </Link>
       </div>
 
     </nav>
